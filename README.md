@@ -5,7 +5,7 @@ This repository contains a (partial) history of the Winapp2.ini file as maintain
 ## Files
 
 * Winapp2.ini: the unmodified file from upstream
-* removed-entries.ini: entries removed frm upstream that are added back for BleachBit
+* removed-entries.ini: entries removed from upstream that are added back for BleachBit
 
 ## Reporting bugs
 For bugs in the unmodified Winapp2.ini file or to report a change that belongs upstream (which benefits BlachBit, CCleaner, and System Ninja), please use the contact information in Winapp2.ini itself or visit www.winapp2.com

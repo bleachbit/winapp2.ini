@@ -33,6 +33,9 @@ echo Combining body with header
 cat Winapp2-combined.header Winapp2-combined.tmp > Winapp2-combined.ini
 rm Winapp2-combined.{header,tmp}
 
+echo unix2dos
+unix2dos Winapp2-combined.ini
+
 echo "git commit (in 5 seconds)"
 sleep 5
 git commit -m 'Automatic update by combining Winapp2.ini plus removed-entries.ini' Winapp2-combined.ini

@@ -12,3 +12,7 @@ This repository contains a (partial) history of the Winapp2.ini file as maintain
 For bugs in the unmodified Winapp2.ini file or to report a change that belongs upstream (which benefits BleachBit, CCleaner, and System Ninja), please use the contact information in the Winapp2.ini file itself or visit www.winapp2.com
 
 For bugs in the extra entries or to report an entry removed from www.winapp2.com that belongs in BleachBit, please file a bug report at https://bugs.launchpad.net/bleachbit/ .
+
+## License
+
+The data (Winapp2.ini and removed-entries.ini) do not have an explicit license. The software (merge-commit.sh) is licensed under the [GNU GPL version 3 or later](https://www.gnu.org/copyleft/gpl.html).

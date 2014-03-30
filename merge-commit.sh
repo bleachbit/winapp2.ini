@@ -35,6 +35,10 @@ rm Winapp2-combined.{header,tmp}
 
 echo unix2dos
 unix2dos Winapp2-combined.ini
+if [ $? -ne 0 ]; then
+    echo "aborted: unix2dos failed"
+    exit
+fi
 
 echo "git commit (in 5 seconds)"
 sleep 5

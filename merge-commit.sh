@@ -36,7 +36,15 @@ rm Winapp2-combined.{header,tmp}
 echo unix2dos
 unix2dos Winapp2-combined.ini
 if [ $? -ne 0 ]; then
-    echo "aborted: unix2dos failed"
+    echo "ERROR: unix2dos failed"
+    exit
+fi
+
+echo Checking for duplicate keys
+DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini removed-entries.ini  | sort | uniq -d| wc -l`
+if [ "$DUP_COUNT" -gt "0" ]; then
+    echo "ERROR: duplicate keys detected:"
+    grep -Ph "^\[.*\]" Winapp2.ini removed-entries.ini  | sort | uniq -d
     exit
 fi
 

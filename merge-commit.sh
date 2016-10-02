@@ -48,6 +48,9 @@ if [ "$DUP_COUNT" -gt "0" ]; then
     exit
 fi
 
+echo Checking for duplicate options within a section
+python check_ini.py
+
 echo "git commit (in 5 seconds)"
 sleep 5
 git commit -m 'Automatic update by combining Winapp2.ini plus removed-entries.ini' Winapp2-combined.ini

@@ -12,7 +12,7 @@ echo git pull
 git pull
 
 echo cat
-cat Winapp2.ini removed-entries.ini > Winapp2-combined.ini
+cat Winapp2.ini > Winapp2-combined.ini
 
 echo Removing Default= lines, which are not used by BleachBit
 grep -viP "^Default=" Winapp2-combined.ini >Winapp2-combined.tmp
@@ -23,7 +23,6 @@ echo $ENTRY_COUNT entries
 
 echo Creating header
 echo "; Winapp2.ini for BleachBit" > Winapp2-combined.header
-echo ";  A combination of www.winapp2.com's winapp2.ini plus extra entries" >> Winapp2-combined.header
 echo ";  $ENTRY_COUNT entries" >> Winapp2-combined.header
 echo ";  https://github.com/az0/winapp2.ini/" >> Winapp2-combined.header
 echo " " >> Winapp2-combined.header
@@ -41,7 +40,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo Checking for duplicate keys
-DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini removed-entries.ini  | sort | uniq -d| wc -l`
+DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
 if [ "$DUP_COUNT" -gt "0" ]; then
     echo "ERROR: duplicate keys detected:"
     grep -Ph "^\[.*\]" Winapp2.ini removed-entries.ini  | sort | uniq -d

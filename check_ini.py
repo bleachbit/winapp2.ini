@@ -36,10 +36,17 @@ cf_s = ConfigParser.ConfigParser()
 cf_s.read('Winapp2.ini')
 cf_m.read('Winapp2.ini')
 
+found_errors = False
+
 for section in cf_s.sections():
     options = cf_s.options(section)
     for option in options:
         value = cf_m.get(section, option)
         l = len(value)
         if l > 1:
+            found_errors = True
             print 'Duplicate option %s in section %s' % (option, section)
+
+if found_errors:
+    import sys
+    sys.exit(1)

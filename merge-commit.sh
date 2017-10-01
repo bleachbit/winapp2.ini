@@ -23,6 +23,21 @@ if [ "$updateupstream" = "yes" ]; then
     git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
 fi
 
+echo Checking for duplicate keys
+DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
+if [ "$DUP_COUNT" -gt "0" ]; then
+    echo "ERROR: duplicate keys detected:"
+    grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d
+    exit
+fi
+
+echo Checking for duplicate options within a section
+python check_ini.py
+if [ $? -ne 0 ]; then
+    echo "ERROR: check_ini failed"
+    exit 1
+fi
+
 echo Removing Default= lines, which are not used by BleachBit
 grep -viP "^Default=" Winapp2.ini > body.ini.tmp
 
@@ -42,17 +57,6 @@ if [ $? -ne 0 ]; then
     echo "ERROR: unix2dos failed"
     exit
 fi
-
-echo Checking for duplicate keys
-DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
-if [ "$DUP_COUNT" -gt "0" ]; then
-    echo "ERROR: duplicate keys detected:"
-    grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d
-    exit
-fi
-
-echo Checking for duplicate options within a section
-python check_ini.py
 
 echo -n "Commit $OUTPUTINI ? (yes/no): "
 read updateupstream

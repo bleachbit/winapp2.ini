@@ -5,35 +5,39 @@
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 #
-# Generate Winapp2-combined.ini
+# Generate Winapp2-BleachBit.ini
 #
 
-echo git pull
+UPSTREAMDIR=../Winapp2
+OUTPUTINI=Winapp2-BleachBit.ini
+
+echo git pull here
 git pull
 
-echo cat
-cat Winapp2.ini > Winapp2-combined.ini
+echo -n "Update upstream? (yes/no): "
+read updateupstream
+if [ "$updateupstream" = "yes" ]; then
+    git -C $UPSTREAMDIR pull
+    cp $UPSTREAMDIR/Non-CCleaner/Winapp2.ini .
+    git diff Winapp2.ini | less
+    git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
+fi
 
 echo Removing Default= lines, which are not used by BleachBit
-grep -viP "^Default=" Winapp2-combined.ini >Winapp2-combined.tmp
-
-echo Counting
-ENTRY_COUNT=`grep "\[" Winapp2-combined.tmp | wc -l`
-echo $ENTRY_COUNT entries
+grep -viP "^Default=" Winapp2.ini > body.ini.tmp
 
 echo Creating header
-echo "; Winapp2.ini for BleachBit" > Winapp2-combined.header
-echo ";  $ENTRY_COUNT entries" >> Winapp2-combined.header
-echo ";  https://github.com/az0/winapp2.ini/" >> Winapp2-combined.header
-echo " " >> Winapp2-combined.header
-echo " " >> Winapp2-combined.header
+echo "; Winapp2.ini for BleachBit" > header.ini.tmp
+echo ";  https://github.com/bleachbit/winapp2.ini/" >> header.ini.tmp
+echo " " >> header.ini.tmp
+echo " " >> header.ini.tmp
 
 echo Combining body with header
-cat Winapp2-combined.header Winapp2-combined.tmp > Winapp2-combined.ini
-rm Winapp2-combined.{header,tmp}
+cat header.ini.tmp body.ini.tmp > $OUTPUTINI
+rm *.ini.tmp
 
 echo unix2dos
-unix2dos Winapp2-combined.ini
+unix2dos $OUTPUTINI
 if [ $? -ne 0 ]; then
     echo "ERROR: unix2dos failed"
     exit
@@ -50,9 +54,12 @@ fi
 echo Checking for duplicate options within a section
 python check_ini.py
 
-echo "git commit (in 5 seconds)"
-sleep 5
-git commit -m 'Automatic update by combining Winapp2.ini plus removed-entries.ini' Winapp2-combined.ini
+echo -n "Commit $OUTPUTINI ? (yes/no): "
+read updateupstream
+if [ "$updateupstream" = "yes" ]; then
+    git commit -m 'Automatic update by processing Winapp2.ini' $OUTPUTINI
+else
+    echo "Here is the command to do it later"
+    echo git commit -m 'Automatic update by processing Winapp2.ini' $OUTPUTINI
+fi
 
-echo git push
-git push

@@ -11,9 +11,15 @@
 UPSTREAMDIR=../Winapp2
 OUTPUTINI=Winapp2-BleachBit.ini
 
+sbreak () {
+    # Show a section break to make the output easier to read
+    echo " "
+}
+
 echo git pull here
 git pull
 
+sbreak
 echo -n "Update upstream? (yes/no): "
 read updateupstream
 if [ "$updateupstream" = "yes" ]; then
@@ -23,6 +29,7 @@ if [ "$updateupstream" = "yes" ]; then
     git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
 fi
 
+sbreak
 echo Checking for duplicate keys
 DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
 if [ "$DUP_COUNT" -gt "0" ]; then
@@ -31,6 +38,7 @@ if [ "$DUP_COUNT" -gt "0" ]; then
     exit
 fi
 
+sbreak
 echo Checking for duplicate options within a section
 python check_ini.py
 if [ $? -ne 0 ]; then
@@ -38,19 +46,23 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+sbreak
 echo Removing Default= lines, which are not used by BleachBit
 grep -viP "^Default=" Winapp2.ini > body.ini.tmp
 
+sbreak
 echo Creating header
 echo "; Winapp2.ini for BleachBit" > header.ini.tmp
 echo ";  https://github.com/bleachbit/winapp2.ini/" >> header.ini.tmp
 echo " " >> header.ini.tmp
 echo " " >> header.ini.tmp
 
+sbreak
 echo Combining body with header
 cat header.ini.tmp body.ini.tmp > $OUTPUTINI
 rm *.ini.tmp
 
+sbreak
 echo unix2dos
 unix2dos $OUTPUTINI
 if [ $? -ne 0 ]; then
@@ -58,6 +70,7 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
+sbreak
 echo -n "Commit $OUTPUTINI ? (yes/no): "
 read updateupstream
 if [ "$updateupstream" = "yes" ]; then

@@ -4,9 +4,11 @@ This repository contained a (partial) history of the Winapp2.ini file as maintai
 
 ## Files
 
-* [Winapp2.ini](https://github.com/bleachbit/winapp2.ini/blob/master/Winapp2.ini): the unmodified file from upstream with entries removed for CCleaner added back
-* [check_ini.py]: Sanity checks for Winapp2.ini
-* [merge-commit.sh]: Processing and sanity checks for Winapp2.ini
+* Winapp2.ini: the unmodified file from upstream with entries removed for CCleaner added back
+* Winapp2-BleachBit.ini: the file that the BleachBit application uses
+* check_ini.py: Sanity checks for Winapp2.ini
+* merge-commit.sh: Processing and sanity checks for Winapp2.ini
+* profile.sh: Generate statistics on FileKey#, DetectKey#, and Environment Variables
 
 ## Reporting bugs
 For bugs in the unmodified Winapp2.ini file or to report a change that belongs upstream (which benefits BleachBit, CCleaner, System Ninja, and Avira System Speedup), please see the [Winapp2 GitHub page](https://github.com/MoscaDotTo/Winapp2/).

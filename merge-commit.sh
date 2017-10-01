@@ -47,7 +47,7 @@ echo Checking for duplicate keys
 DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
 if [ "$DUP_COUNT" -gt "0" ]; then
     echo "ERROR: duplicate keys detected:"
-    grep -Ph "^\[.*\]" Winapp2.ini removed-entries.ini  | sort | uniq -d
+    grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d
     exit
 fi
 

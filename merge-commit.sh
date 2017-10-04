@@ -47,6 +47,16 @@ if [ $? -ne 0 ]; then
 fi
 
 sbreak
+echo Checking for ExcludeKey#=REG
+DK_REG_COUNT=`grep -iP "excludekey\d+=reg\|" Winapp2.ini | wc -l`
+if [ "$DK_REG_COUNT" -gt "0" ]; then
+    echo "ERROR: Found unsupported lines:"
+    grep -iP "excludekey\d+=reg\|" Winapp2.ini
+    exit 1
+fi
+
+
+sbreak
 echo Removing Default= lines, which are not used by BleachBit
 grep -viP "^Default=" Winapp2.ini > body.ini.tmp
 

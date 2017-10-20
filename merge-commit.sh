@@ -38,6 +38,18 @@ if [ "$DUP_COUNT" -gt "0" ]; then
     exit
 fi
 
+# example: FileKey1=AppData%\
+# example: FileKey1=%AppData\-
+# be careful with the character \ in the regular expression
+sbreak
+echo Checking for malformed environment variable
+MISSING_PERCENT=`grep -Pi "^(FileKey|DetectFile)\d*=([^%]|%[a-z]+[^%]\\\\\\\\)" Winapp2.ini | wc -l`
+if [ "$MISSING_PERCENT" -gt "0" ]; then
+    echo "ERROR: malformed environment variable"
+    grep -Pi "^(FileKey|DetectFile)\d*=([^%]|%[a-z]+[^%]\\\\)" Winapp2.ini
+    exit
+fi
+
 sbreak
 echo Checking for duplicate options within a section
 python check_ini.py

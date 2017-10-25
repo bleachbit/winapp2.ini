@@ -77,6 +77,15 @@ if [ "$RE_COUNT" -gt "0" ]; then
 fi
 
 sbreak
+echo Checking for RECURSE/REMOVESELF without pipe
+RE_PIPE=`grep -Pi '(?<!\|)(REMOVESELF|RECURSE)' Winapp2.ini | wc -l`
+if [ "$RE_PIPE" -gt "0" ]; then
+    echo "ERROR: Found missing pipe:"
+    grep -Pi '(?<!\|)(REMOVESELF|RECURSE)' Winapp2.ini
+    exit 1
+fi
+
+sbreak
 echo Removing Default= lines, which are not used by BleachBit
 grep -viP "^Default=" Winapp2.ini > body.ini.tmp
 

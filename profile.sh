@@ -18,4 +18,4 @@ grep -iPo "excludekey\d+" Winapp2.ini  | grep -oP "\d+" | sort -n |uniq -c
 
 echo
 echo Environment variables
-grep -iPo "%[^%]+%" Winapp2-BleachBit.ini | sort | uniq -ci
+grep -iPo "%[^%]+%" Winapp2.ini | sort | uniq -ci

@@ -67,6 +67,14 @@ if [ "$DK_REG_COUNT" -gt "0" ]; then
     exit 1
 fi
 
+sbreak
+echo Checking for misspelling of RECURSE/REMOVESELF
+RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)$" | wc -l`
+if [ "$RE_COUNT" -gt "0" ]; then
+    echo "ERROR: Found misspelling of RECURSE/REMOVESELF:"
+    grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)$"
+    exit 1
+fi
 
 sbreak
 echo Removing Default= lines, which are not used by BleachBit

@@ -29,13 +29,15 @@ if [ "$updateupstream" = "yes" ]; then
     git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
 fi
 
+ANY_ERRORS=0 # initialize error flag (boolean)
+
 sbreak
 echo Checking for duplicate keys
 DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`
 if [ "$DUP_COUNT" -gt "0" ]; then
     echo "ERROR: duplicate keys detected:"
     grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d
-    exit
+    ANY_ERRORS=1
 fi
 
 # example: FileKey1=AppData%\
@@ -47,7 +49,7 @@ MISSING_PERCENT=`grep -Pi "^(FileKey|DetectFile)\d*=([^%]|%[a-z]+[^%]\\\\\\\\)" 
 if [ "$MISSING_PERCENT" -gt "0" ]; then
     echo "ERROR: malformed environment variable"
     grep -Pi "^(FileKey|DetectFile)\d*=([^%]|%[a-z]+[^%]\\\\)" Winapp2.ini
-    exit
+    ANY_ERRORS=1
 fi
 
 sbreak
@@ -55,7 +57,7 @@ echo Checking for duplicate options within a section
 python check_ini.py
 if [ $? -ne 0 ]; then
     echo "ERROR: check_ini failed"
-    exit 1
+    ANY_ERRORS=1
 fi
 
 sbreak
@@ -64,7 +66,7 @@ DK_REG_COUNT=`grep -iP "excludekey\d+=reg\|" Winapp2.ini | wc -l`
 if [ "$DK_REG_COUNT" -gt "0" ]; then
     echo "ERROR: Found unsupported lines:"
     grep -iP "excludekey\d+=reg\|" Winapp2.ini
-    exit 1
+    ANY_ERRORS=1
 fi
 
 sbreak
@@ -73,7 +75,7 @@ RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -
 if [ "$RE_COUNT" -gt "0" ]; then
     echo "ERROR: Found misspelling of RECURSE/REMOVESELF:"
     grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)$"
-    exit 1
+    ANY_ERRORS=1
 fi
 
 sbreak
@@ -82,6 +84,14 @@ RE_PIPE=`grep -Pi '(?<!\|)(REMOVESELF|RECURSE)' Winapp2.ini | wc -l`
 if [ "$RE_PIPE" -gt "0" ]; then
     echo "ERROR: Found missing pipe:"
     grep -Pi '(?<!\|)(REMOVESELF|RECURSE)' Winapp2.ini
+    ANY_ERRORS=1
+fi
+
+if [ "$ANY_ERRORS" -ne "0" ]; then
+    # This error-handling method shows all types of errors
+    # before exiting.
+    echo " "
+    echo "ERROR: Exiting because of error"
     exit 1
 fi
 

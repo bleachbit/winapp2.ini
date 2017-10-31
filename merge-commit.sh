@@ -122,8 +122,8 @@ fi
 
 sbreak
 echo -n "Commit $OUTPUTINI ? (yes/no): "
-read updateupstream
-if [ "$updateupstream" = "yes" ]; then
+read update_ini
+if [ "$update_ini" = "yes" ]; then
     git commit -m 'Automatic update by processing Winapp2.ini' $OUTPUTINI
 else
     echo "Here is the command to do it later"

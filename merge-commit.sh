@@ -25,6 +25,7 @@ read updateupstream
 if [ "$updateupstream" = "yes" ]; then
     git -C $UPSTREAMDIR pull
     cp $UPSTREAMDIR/Non-CCleaner/Winapp2.ini .
+    dos2unix Winapp2.ini
     git diff Winapp2.ini | less
     git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
 fi

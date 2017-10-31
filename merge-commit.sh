@@ -71,10 +71,10 @@ fi
 
 sbreak
 echo Checking for misspelling of RECURSE/REMOVESELF
-RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)$" | wc -l`
+RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)\s*$" | wc -l`
 if [ "$RE_COUNT" -gt "0" ]; then
     echo "ERROR: Found misspelling of RECURSE/REMOVESELF:"
-    grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)$"
+    grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)\s*$"
     ANY_ERRORS=1
 fi
 

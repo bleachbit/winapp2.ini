@@ -71,6 +71,15 @@ if [ "$DK_REG_COUNT" -gt "0" ]; then
 fi
 
 sbreak
+echo "Checking for DetectOS=min|max not supported in BleachBit 2.0"
+DETECTOS_MINMAX_COUNT=`grep -P "^DetectOS=\d+\.\d+\|\d" Winapp2.ini | wc -l`
+if [ "$DETECTOS_MINMAX_COUNT" -gt "0" ]; then
+    echo "ERROR: Found unsupported lines:"
+    grep -P "^DetectOS=\d+\.\d+\|\d" Winapp2.ini
+    ANY_ERRORS=1
+fi
+
+sbreak
 echo Checking for misspelling of RECURSE/REMOVESELF
 RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)\s*$" | wc -l`
 if [ "$RE_COUNT" -gt "0" ]; then

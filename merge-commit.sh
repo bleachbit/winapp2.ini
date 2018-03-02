@@ -27,7 +27,9 @@ if [ "$updateupstream" = "yes" ]; then
     cp $UPSTREAMDIR/Non-CCleaner/Winapp2.ini .
     dos2unix Winapp2.ini
     git diff Winapp2.ini | less
-    git commit Winapp2.ini -m 'Automatic update of Winapp2.ini from upstream GitHub repository'
+    git commit Winapp2.ini \
+        -m 'Automatic update of Winapp2.ini from upstream GitHub repository' \
+        --author="Winapp2.ini community <multiple@winapp2.com>"
 fi
 
 ANY_ERRORS=0 # initialize error flag (boolean)

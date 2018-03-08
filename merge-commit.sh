@@ -82,6 +82,16 @@ if [ "$DETECTOS_MINMAX_COUNT" -gt "0" ]; then
 fi
 
 sbreak
+echo "Checking for ExcludeKey with ampersand not supported in BleachBit 2.0"
+EK_AMP_COUNT=`grep -P "^ExcludeKey.*\&" Winapp2.ini | wc -l`
+if [ "$EK_AMP_COUNT" -gt "0" ]; then
+    echo "ERROR: Found unsupported lines:"
+    grep -P "^ExcludeKey.*\&" Winapp2.ini
+    ANY_ERRORS=1
+fi
+
+
+sbreak
 echo Checking for misspelling of RECURSE/REMOVESELF
 RE_COUNT=`grep -iP ^FileKey Winapp2.ini  | grep "|.*|" | cut -d \| -f 3 | grep -vP "^(RECURSE|REMOVESELF)\s*$" | wc -l`
 if [ "$RE_COUNT" -gt "0" ]; then

@@ -8,11 +8,11 @@
 # Statistics
 #
 
-echo The distribution of FileKey## as it relates to MAX_DETECT
+echo "The distribution of FileKey## (formerly for MAX_DETECT)"
 grep -iPo "filekey\d+" Winapp2.ini  | grep -oP "\d+" | sort -n |uniq -c
 
 echo
-echo The distribution of ExcludeKey## as it relates to MAX_DETECT
+echo "The distribution of ExcludeKey## (formerly for MAX_DETECT)"
 grep -iPo "excludekey\d+" Winapp2.ini  | grep -oP "\d+" | sort -n |uniq -c
 
 echo

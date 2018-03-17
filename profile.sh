@@ -16,6 +16,10 @@ echo "The distribution of ExcludeKey## (formerly for MAX_DETECT)"
 grep -iPo "excludekey\d+" Winapp2.ini  | grep -oP "\d+" | sort -n |uniq -c
 
 echo
+echo "The values for SpecialDetect"
+grep -iP "^SpecialDetect=" Winapp2.ini  | sort -n |uniq -c
+
+echo
 echo Environment variables
 grep -iPo "%[^%]+%" Winapp2.ini | sort | uniq -ci
 

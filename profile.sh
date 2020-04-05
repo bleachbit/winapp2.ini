@@ -26,3 +26,7 @@ grep -iPo "%[^%]+%" Winapp2.ini | sort | uniq -ci
 echo
 echo DetectOS
 grep -i detectos= Winapp2-BleachBit.ini | sort |uniq -c
+
+echo
+echo LangSecRef
+grep -i langsecref= Winapp2-BleachBit.ini | sort |uniq -c

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2016 by Andrew Ziem.  All rights reserved.
+# Copyright (C) 2016, 2024 by Andrew Ziem.  All rights reserved.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
@@ -9,44 +9,64 @@
 #
 
 
-import ConfigParser
-from collections import OrderedDict
+import configparser
+import sys
+import unittest
 
 
-# handle multiple values for same key
-# http://stackoverflow.com/questions/15848674/how-to-configparse-a-file-keeping-multiple-values-for-identical-keys
-class MultiOrderedDict(OrderedDict):
+def check_ini_file(filename):
+    cp = configparser.ConfigParser(strict=True)
+    try:
+        cp.read(filename)
+    except (configparser.DuplicateSectionError, configparser.DuplicateOptionError) as e:
+        print(e)
+        return False
+    return True
 
-    def __setitem__(self, key, value):
-        if isinstance(value, list) and key in self:
-            self[key].extend(value)
-        else:
-            super(OrderedDict, self).__setitem__(key, value)
 
-# As a quick hack, use two instances because the multi returns
-# no sections and no options, while the multi does not preserve
-# multiple values for duplicate key names.
+class TestCheckIni(unittest.TestCase):
+    def test_duplicate_section(self):
+        # Create the .ini files
+        duplicate_section_file = 'test_duplicate_section.ini'
+        with open(duplicate_section_file, 'w') as f:
+            f.write("[Section1]\n")
+            f.write("option1=value1\n")
+            f.write("[Section1]\n")  # Duplicate section
+            f.write("option2=value2\n")
 
-# m = multi
-cf_m = ConfigParser.ConfigParser(dict_type=MultiOrderedDict)
+        self.assertFalse(check_ini_file(duplicate_section_file))
 
-# s = single
-cf_s = ConfigParser.ConfigParser()
+    def test_duplicate_option(self):
+        # Create the .ini files
+        duplicate_option_file = 'test_duplicate_option.ini'
+        with open(duplicate_option_file, 'w') as f:
+            f.write("[Section1]\n")
+            f.write("option1=value1\n")
+            f.write("option1=value2\n")  # Duplicate option in the same section
+            f.write("[Section2]\n")
+            f.write("option1=value3\n")  # Valid option in a different section
 
-cf_s.read('Winapp2.ini')
-cf_m.read('Winapp2.ini')
+        self.assertFalse(check_ini_file(duplicate_option_file))
 
-found_errors = False
+    def test_valid(self):
+        # Create the .ini files
+        valid_file = 'test_valid.ini'
+        with open(valid_file, 'w') as f:
+            f.write("[Section1]\n")
+            f.write("option1=value1\n")
+            f.write("[Section2]\n")
+            f.write("option2=value2\n")
 
-for section in cf_s.sections():
-    options = cf_s.options(section)
-    for option in options:
-        value = cf_m.get(section, option)
-        l = len(value)
-        if l > 1:
-            found_errors = True
-            print 'Duplicate option %s in section %s' % (option, section)
+        self.assertTrue(check_ini_file(valid_file))
 
-if found_errors:
-    import sys
-    sys.exit(1)
+
+if __name__ == "__main__":
+    # If no args, print usage
+    # If filename passed, run check_ini_file(filename).
+    # if --test passed, run unit tests.
+    if len(sys.argv) == 1:
+        print("Usage: check_ini.py filename.ini")
+    elif sys.argv[1] == "--test":
+        unittest.main(argv=[sys.argv[0]], exit=False)
+    else:
+        check_ini_file(sys.argv[1])

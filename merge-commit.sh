@@ -57,12 +57,18 @@ fi
 
 sbreak
 echo Checking for duplicate options within a section
-python check_ini.py
+python3 check_ini.py Winapp2.ini
 if [ $? -ne 0 ]; then
     echo "ERROR: check_ini failed"
     ANY_ERRORS=1
 fi
 
+echo Removing ExcludeKey#=REG
+python3 remove_unsupported.py Winapp2.ini
+if [ $? -ne 0 ]; then
+    echo "ERROR: remove_unsupported failed"
+    ANY_ERRORS=1
+fi
 sbreak
 echo Checking for ExcludeKey#=REG
 DK_REG_COUNT=`grep -iP "excludekey\d+=reg\|" Winapp2.ini | wc -l`

@@ -6,12 +6,33 @@
 # There is NO WARRANTY, to the extent permitted by law.
 #
 # Remove unsupported sections from Winapp2.ini.
+# It also adds a comment to the top of the file.
 #
 
+import datetime
 import configparser
+import os
 import unittest
 import sys
-import os
+
+
+def read_header(ini_filename, max_lines=50):
+    """"
+    Reads the commented-out header until the first section
+    marked with "["] and returns the header as a string.
+
+    FIXME later: preserve comments between sections.
+    """
+
+    with open(ini_filename, 'r') as f:
+        header = ""
+        for i in range(max_lines):
+            line = f.readline()
+            if line.startswith(";"):
+                header += line
+            if line.startswith("["):
+                break
+    return header
 
 
 def remove_unsupported(ini_filename):
@@ -22,6 +43,8 @@ def remove_unsupported(ini_filename):
     ExcludeKey1=REG|HKCU\Software\MyApp\Settings
     ExcludeKey2=REG|HKCU\Software\MyApp\Preferences
     """
+
+    original_header = read_header(ini_filename)
     # Use RawConfigParser to avoid interpolation.
     cp = configparser.RawConfigParser()
     cp.optionxform = str  # Be case sensitive.
@@ -38,10 +61,19 @@ def remove_unsupported(ini_filename):
     for section in sections_to_remove:
         cp.remove_section(section)
 
-    with open(ini_filename, 'w') as configfile:
-        cp.write(configfile)
-
     print(f"Removed sections: {sections_to_remove}")
+
+    with open(ini_filename, 'w') as configfile:
+        today = datetime.date.today()
+        configfile.write(f"""
+; Winapp2.ini for Bleachbit
+; https://github.com/bleachbit/winapp2.ini/
+; Processed for BleachBit on {today}
+
+""")
+        # Python ConfigParser strips the comment, so add it back.
+        configfile.write(original_header)
+        cp.write(configfile)
 
 
 class TestRemoveUnsupported(unittest.TestCase):

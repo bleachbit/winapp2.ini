@@ -34,6 +34,11 @@ fi
 
 ANY_ERRORS=0 # initialize error flag (boolean)
 
+# Verify the Winapp2.ini file has at least 10,000 lines.
+if [ `wc -l < Winapp2.ini` -lt 10000 ]; then
+    echo "ERROR: Winapp2.ini has less than 10,000 lines"
+    exit 1
+fi
 sbreak
 echo Checking for duplicate keys
 DUP_COUNT=`grep -Ph "^\[.*\]" Winapp2.ini | sort | uniq -d| wc -l`

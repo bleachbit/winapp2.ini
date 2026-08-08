@@ -17,7 +17,7 @@ sbreak () {
 }
 
 echo git pull here
-git pull
+git pull --ff-only
 
 sbreak
 echo -n "Update upstream? (yes/no): "

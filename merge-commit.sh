@@ -58,6 +58,15 @@ if [ "$PACKAGE_COUNT" -gt "0" ]; then
 fi
 
 sbreak
+echo Checking for unresolved %Package% variable
+PACKAGE_VAR_COUNT=`grep -Pi '%package%' $OUTPUTINI | wc -l`
+if [ "$PACKAGE_VAR_COUNT" -gt "0" ]; then
+    echo "ERROR: Found unresolved %Package% variable:"
+    grep -Pi '%package%' $OUTPUTINI
+    ANY_ERRORS=1
+fi
+
+sbreak
 echo Checking for duplicate keys
 DUP_COUNT=`grep -Ph "^\[.*\]" $OUTPUTINI | sort | uniq -d| wc -l`
 if [ "$DUP_COUNT" -gt "0" ]; then

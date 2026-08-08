@@ -33,6 +33,7 @@ if [ "$updateupstream" = "yes" ]; then
 fi
 
 ANY_ERRORS=0 # initialize error flag (boolean)
+ANY_WARNINGS=0
 
 # Verify the Winapp2.ini file has at least 10,000 lines.
 if [ `wc -l < Winapp2.ini` -lt 10000 ]; then
@@ -42,6 +43,19 @@ fi
 
 # Copy Winapp2.ini to Winapp2-BleachBit.ini.
 cp Winapp2.ini $OUTPUTINI
+
+# See https://github.com/MoscaDotTo/Winapp2/blob/master/CONTRIBUTING.md#the-package-variable
+# Use $() (not backticks) and \\ (not \\\\): backticks do an extra round of
+# backslash processing, which would make the count and the listing disagree.
+sbreak
+echo 'Checking for malformed %Package\ entries (upstream bug)'
+PACKAGE_COUNT=$(grep -P '^FileKey.*%Package\\' $OUTPUTINI | wc -l)
+if [ "$PACKAGE_COUNT" -gt "0" ]; then
+    echo "WARNING: Found malformed %Package\ entries (will be removed):"
+    grep -P '^FileKey.*%Package\\' $OUTPUTINI
+    sed -i '/^FileKey.*%Package\\/d' $OUTPUTINI
+    ANY_WARNINGS=1
+fi
 
 sbreak
 echo Checking for duplicate keys
@@ -150,5 +164,10 @@ if [ "$update_ini" = "yes" ]; then
 else
     echo "Here is the command to do it later"
     echo git commit -m 'Automatic update by processing Winapp2.ini' $OUTPUTINI
+fi
+
+if [ "$ANY_WARNINGS" -ne "0" ]; then
+    echo " "
+    echo "WARNING: Look above for warnings"
 fi
 

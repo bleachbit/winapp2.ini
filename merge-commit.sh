@@ -158,14 +158,6 @@ if [ "$ANY_ERRORS" -ne "0" ]; then
 fi
 
 sbreak
-echo unix2dos
-unix2dos $OUTPUTINI
-if [ $? -ne 0 ]; then
-    echo "ERROR: unix2dos failed"
-    exit
-fi
-
-sbreak
 echo -n "Commit $OUTPUTINI ? (yes/no): "
 read update_ini
 if [ "$update_ini" = "yes" ]; then

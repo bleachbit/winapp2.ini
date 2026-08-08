@@ -119,7 +119,7 @@ def apply_bleachbit_patches(target_path, patches_path):
             '\n\n'.join(conflicts)
         )
 
-    with open(target_path, 'w', encoding='utf-8', newline='') as f:
+    with open(target_path, 'w', encoding='utf-8', newline='\n') as f:
         f.writelines(lines)
 
 

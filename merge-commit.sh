@@ -118,6 +118,14 @@ if [ "$DK_REG_COUNT" -gt "0" ]; then
     ANY_ERRORS=1
 fi
 
+sbreak
+echo Applying BleachBit-specific patches
+python3 apply_bleachbit_patches.py $OUTPUTINI bleachbit_patches.ini
+if [ $? -ne 0 ]; then
+    echo "ERROR: apply_bleachbit_patches failed"
+    ANY_ERRORS=1
+fi
+
 if [ "$ANY_ERRORS" -ne "0" ]; then
     # This error-handling method shows all types of errors
     # before exiting.

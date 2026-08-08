@@ -8,6 +8,8 @@ This repository previously was used to track a (partial) history of the Winapp2.
 
 * [Winapp2-BleachBit.ini](https://github.com/bleachbit/winapp2.ini/blob/master/Winapp2-BleachBit.ini): the file for use with BleachBit - ***this is likely what you want***
 * Winapp2.ini: the unmodified file from upstream with entries removed for CCleaner added back in
+* bleachbit_patches.ini: BleachBit-specific additions applied after upstream processing
+* apply_bleachbit_patches.py: Apply bleachbit_patches.ini to Winapp2-BleachBit.ini
 * check_ini.py: Sanity checks for Winapp2.ini
 * merge-commit.sh: Processing and sanity checks for Winapp2.ini
 * profile.sh: Generate statistics on FileKey#, DetectKey#, and Environment Variables

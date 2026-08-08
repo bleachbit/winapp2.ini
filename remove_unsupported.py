@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-# Copyright (C) 2024 by Andrew Ziem.  All rights reserved.
-# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
-# This is free software: you are free to change and redistribute it.
-# There is NO WARRANTY, to the extent permitted by law.
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2008-2026 Andrew Ziem.
 #
-# Remove unsupported sections from Winapp2.ini.
-# It also adds a comment to the top of the file.
-#
+# This work is licensed under the terms of the GNU GPL, version 3 or
+# later.  See the COPYING file in the top-level directory.
+
+"""
+Remove unsupported sections from Winapp2.ini.
+It also adds a comment to the top of the file.
+"""
 
 import datetime
 import configparser

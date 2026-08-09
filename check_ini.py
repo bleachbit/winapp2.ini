@@ -17,6 +17,11 @@ import unittest
 
 
 def check_ini_file(filename):
+    """Check an INI file for duplicate sections and options.
+
+    Returns True if the file is valid, False if a duplicate section or
+    option is found.
+    """
     cp = configparser.ConfigParser(strict=True)
     try:
         cp.read(filename)
@@ -27,10 +32,13 @@ def check_ini_file(filename):
 
 
 class TestCheckIni(unittest.TestCase):
+    """Unit tests for check_ini_file."""
+
     def test_duplicate_section(self):
+        """Verify that a duplicate section is detected."""
         # Create the .ini files
         duplicate_section_file = 'test_duplicate_section.ini'
-        with open(duplicate_section_file, 'w') as f:
+        with open(duplicate_section_file, 'w', encoding='utf-8') as f:
             f.write("[Section1]\n")
             f.write("option1=value1\n")
             f.write("[Section1]\n")  # Duplicate section
@@ -39,9 +47,10 @@ class TestCheckIni(unittest.TestCase):
         self.assertFalse(check_ini_file(duplicate_section_file))
 
     def test_duplicate_option(self):
+        """Verify that a duplicate option within a section is detected."""
         # Create the .ini files
         duplicate_option_file = 'test_duplicate_option.ini'
-        with open(duplicate_option_file, 'w') as f:
+        with open(duplicate_option_file, 'w', encoding='utf-8') as f:
             f.write("[Section1]\n")
             f.write("option1=value1\n")
             f.write("option1=value2\n")  # Duplicate option in the same section
@@ -51,9 +60,10 @@ class TestCheckIni(unittest.TestCase):
         self.assertFalse(check_ini_file(duplicate_option_file))
 
     def test_valid(self):
+        """Verify that a well-formed INI file passes the check."""
         # Create the .ini files
         valid_file = 'test_valid.ini'
-        with open(valid_file, 'w') as f:
+        with open(valid_file, 'w', encoding='utf-8') as f:
             f.write("[Section1]\n")
             f.write("option1=value1\n")
             f.write("[Section2]\n")

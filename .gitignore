@@ -1,3 +1,6 @@
+*~
 *.bak
 *.swp
+*.pyc
 test*.ini
+__pycache__/

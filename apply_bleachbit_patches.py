@@ -108,6 +108,14 @@ def insert_options(lines, start, end, options, section_name):
 
     for opt_name, opt_value in options.items():
         if opt_name == 'Warning' and opt_name in existing:
+            existing_match = OPTION_RE.match(lines[existing[opt_name]])
+            existing_value = existing_match.group(2).strip() if existing_match else ''
+            if existing_value == opt_value:
+                continue
+            # This is a meta-warning: a warning about a warning. However, the
+            # warning warning aborts the script, so be warned: it is more
+            # specifically a warning-error because it will abort `merge-commit.sh`
+            # from commiting.
             conflicts.append(
                 f'[{section_name}] already has a Warning; aborting for review.\n'
                 f'  existing: {lines[existing[opt_name]].strip()}\n'
@@ -221,6 +229,20 @@ class TestApplyBleachbitPatches(unittest.TestCase):
 
         self.assertIn('Old warning.', content)
         self.assertNotIn('Test warning.', content)
+
+    def test_apply_skips_identical_warning(self):
+        """An identical existing Warning is silently skipped, not a conflict."""
+        with open(self.target_ini, 'w', encoding='utf-8') as f:
+            f.write('[Windows Taskbar *]\n')
+            f.write('Warning = Test warning.\n')
+            f.write('FileKey1 = %AppData%\\Recent|*.URL|RECURSE\n')
+
+        apply_bleachbit_patches(self.target_ini, self.patches_ini)
+
+        with open(self.target_ini, encoding='utf-8') as f:
+            content = f.read()
+
+        self.assertEqual(content.count('Warning = Test warning.'), 1)
 
     def test_apply_reports_all_conflicts(self):
         """All Warning conflicts across sections are collected into one error."""
